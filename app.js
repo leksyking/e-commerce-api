@@ -1,11 +1,26 @@
 require('dotenv').config()
+require('express-async-errors')
 
 const express = require('express')
 
-//imported files
+//imported modules
 const connectDB = require('./db/connect')
+const errorHandlerMiddleware = require('./middlewares/errorHandler')
+const notFoundMiddleware = require('./middlewares/notfound')
 
 const app = express()
+
+//middlewares
+app.use(express.json())
+
+//Routes
+app.get('/', (req, res) => {
+    res.send("Welcome to the Home Route")
+})
+
+//Middlewares
+app.use(notFoundMiddleware)
+app.use(errorHandlerMiddleware)
 
 const port = process.env.PORT || 5000
 
@@ -19,5 +34,4 @@ const start = async () => {
         console.log(error);
     }
 }
-
 start()
