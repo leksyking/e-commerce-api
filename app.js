@@ -7,6 +7,7 @@ const express = require('express')
 const connectDB = require('./db/connect')
 const errorHandlerMiddleware = require('./middlewares/errorHandler')
 const notFoundMiddleware = require('./middlewares/notfound')
+const authRouter = require('./routes/authRoute')
 
 const app = express()
 
@@ -17,6 +18,7 @@ app.use(express.json())
 app.get('/', (req, res) => {
     res.send("Welcome to the Home Route")
 })
+app.use('/api/v1/auth', authRouter)
 
 //Middlewares
 app.use(notFoundMiddleware)
