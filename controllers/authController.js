@@ -7,18 +7,39 @@ const register = async (req, res) => {
     if(emailExists){
         console.log('email exists already');
     }
+    //make first registered user an admin
+    
+
     const user = await  User.create(req.body)
-    const userDatails = {userId: user._id, username: user.name}
-    const token = attachCookiesToResponse({res, user:userDatails})
-    res.status(200).json({user: {user: name, token:token}})
+    const tokenUser = createTokenUser(user)
+    attachCookiesToResponse({res, user: tokenUser})
+    res.status(200).json({user: {user: tokenUser }})
 }
 
 const login = async (req, res) => {
-    res.status(200).send("Login user")
+    const {email, password} = req.body
+    if(!email || !password){
+        console.log("Please enter your email and password");
+    }
+    const user = await User.findOne({email})
+    if(!user){
+        console.log("Invalid email");
+    }
+    const isPassword = user.comparePassword(password)
+    if(!isPassword){
+        console.log("Incorrect Password");
+    }
+    const tokenUser = createTokenUser(user)
+    attachCookiesToResponse({res, user: tokenUser})
+    res.status(200).json({user: tokenUser})
 }
 
 const logout = async (req, res) => {
-    res.status(200).send("Logout user")
+    res.cookie('token', 'logout',{
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000)
+    } )
+    res.status(200).json({msg: "User is logged out"})
 }
 
 module.exports = {
