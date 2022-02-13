@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
+const bcrypt = require('bcryptjs')
 
-const userSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Please provide a name.'],
@@ -21,12 +22,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide a password.'],
         minlength: 8
-
+    },
+    role: {
+        type: String,
+        enum: ['admin', 'user'],
+        default: 'user'
     }
+}, {timestamps: true});
+
+UserSchema.pre('save', async function(){
+    const salt = await bcrypt.genSalt(10)
+    this.password = await bcrypt.hash(this.password, salt)
 })
 
-
-const User = mongoose.model('User', userSchema)
-
-
+const User = mongoose.model('User', UserSchema)
 module.exports = User

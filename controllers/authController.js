@@ -1,6 +1,14 @@
-//register login logout
+const User = require('../models/user')
+
 const register = async (req, res) => {
-    res.status(200).send("Register user")
+    const { email } = req.body
+    const emailExists = await User.findOne({email})
+    if(emailExists){
+        console.log('email exists already');
+    }
+    const user = await  User.create(req.body)
+
+    res.status(200).json({user})
 }
 
 const login = async (req, res) => {
