@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
     res.send("Welcome to the Home Route")
 })
 app.use('/api/v1/auth', authRouter)
-app.use('/api/v1/user', userRouter)
+app.use('/api/v1/users', userRouter)
 
 //Middlewares
 app.use(notFoundMiddleware)

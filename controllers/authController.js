@@ -1,5 +1,6 @@
 const User = require('../models/user')
 const {attachCookiesToResponse} = require('../utils/jwt')
+const createTokenUser = require('../utils/createTokenuser')
 
 const register = async (req, res) => {
     const { email, name, password } = req.body
@@ -8,9 +9,12 @@ const register = async (req, res) => {
         console.log('email exists already');
     }
     //make first registered user an admin
+    //i will be back
+    const checkFirstUser = (await User.countDocuments()) === 0
     
+    const role = checkFirstUser ? 'admin' : 'user'
 
-    const user = await  User.create(req.body)
+    const user = await  User.create({email, name, password, role})
     const tokenUser = createTokenUser(user)
     attachCookiesToResponse({res, user: tokenUser})
     res.status(200).json({user: {user: tokenUser }})
@@ -19,15 +23,17 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     const {email, password} = req.body
     if(!email || !password){
-        console.log("Please enter your email and password");
+        console.log("Ple7ase enter your email and password");
     }
     const user = await User.findOne({email})
     if(!user){
         console.log("Invalid email");
     }
-    const isPassword = user.comparePassword(password)
+
+    const isPassword = await user.comparePassword(password)
+    console.log(isPassword);
     if(!isPassword){
-        console.log("Incorrect Password");
+     throw new Error("Invalid credentials");
     }
     const tokenUser = createTokenUser(user)
     attachCookiesToResponse({res, user: tokenUser})
