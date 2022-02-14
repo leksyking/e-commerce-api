@@ -1,6 +1,14 @@
+const {isTokenValid} = require('../utils/jwt')
+
 const authNiddleware = async (req, res, next) => {
-    const authHeader = req.headers.authorization
-    if(!authHeader || !authHeader.startsWith('Bearer')){
-        
-    }
+    //check cookies
+    let token = req.signedCookies.token
+    const {userId, username, role} = isTokenValid({token})
+    req.user = {userId, username, role}
+    next()
 }
+const authorizePermission = () => {
+    
+}
+
+module.exports = authNiddleware

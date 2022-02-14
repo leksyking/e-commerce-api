@@ -9,15 +9,13 @@ const register = async (req, res) => {
         console.log('email exists already');
     }
     //make first registered user an admin
-    //i will be back
     const checkFirstUser = (await User.countDocuments()) === 0
-    
     const role = checkFirstUser ? 'admin' : 'user'
 
     const user = await  User.create({email, name, password, role})
     const tokenUser = createTokenUser(user)
     attachCookiesToResponse({res, user: tokenUser})
-    res.status(200).json({user: {user: tokenUser }})
+    res.status(200).json({user: tokenUser })
 }
 
 const login = async (req, res) => {
