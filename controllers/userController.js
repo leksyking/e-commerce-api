@@ -1,5 +1,5 @@
 const User = require('../models/user')
-
+const {StatusCodes} = require('http-status-codes')
 
 const getAllUsers = async (req, res) => {
     const user = await User.find({role: 'user'}).select('-password')
