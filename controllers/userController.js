@@ -2,7 +2,6 @@ const User = require('../models/user')
 
 
 const getAllUsers = async (req, res) => {
-
     const user = await User.find({role: 'user'}).select('-password')
     if(!user){
         throw new Error('Badrequest')
@@ -10,7 +9,6 @@ const getAllUsers = async (req, res) => {
     res.json({user})
 }
 const getSingleUser = async (req, res) => {
-    console.log((req.user));
     const {id : UserId} = req.params
     const user = await User.find({_id: UserId}).select('-password')
     if(!user){
