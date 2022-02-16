@@ -10,7 +10,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
             customError.message = `No user with id: ${err.value}`
       }
       console.log(err);
-      return res.status(customError.status).json({err: customError.message})
+      return res.status(customError.status).json({err:err})
 }
 //cast error - wrong id
 //110001

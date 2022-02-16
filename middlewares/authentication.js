@@ -15,7 +15,8 @@ const authMiddleware = async (req, res, next) => {
         throw new unAuthenticatedError("Authentication failed")
     }
 }
-const authorizePermission = (roles) => {
+
+const authorizePermission = (...roles) => {
     return (req, res, next) =>{
         if(!roles.includes(req.user.role)){
             throw new unAuthorizedError("You are not authorized to access this route")
