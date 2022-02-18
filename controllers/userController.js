@@ -15,7 +15,7 @@ const getSingleUser = async (req, res) => {
     res.status(StatusCodes.OK).json({user})
 }
 const showCurrentUser = async (req, res) => {
-    res.status(StatusCodes.OK).json({user: req.user})
+    res.status(StatusCodes.OK).json(req.user)
 }
 const updateUser = async (req, res) => {
 
