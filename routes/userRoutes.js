@@ -6,6 +6,6 @@ const {authMiddleware, authorizePermission} = require('../middlewares/authentica
 router.route('/').get(authMiddleware, authorizePermission('admin'), getAllUsers)
 
 router.route('/showUser').get(authMiddleware, showCurrentUser);
-router.route('/updatePassword').post(authMiddleware, updateUserPassword)
+router.route('/updatePassword').patch(authMiddleware, updateUserPassword)
 router.route('/:id').get(authMiddleware, getSingleUser)
 module.exports = router

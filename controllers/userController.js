@@ -1,6 +1,6 @@
 const User = require('../models/user')
 const {StatusCodes} = require('http-status-codes')
-const { notFoundError, BadRequestError } = require('../errors')
+const { notFoundError, BadRequestError, unAuthenticatedError } = require('../errors')
 
 const getAllUsers = async (req, res) => {
     const user = await User.find({role: 'user'}).select('-password')
@@ -26,8 +26,14 @@ const updateUserPassword = async (req, res) => {
     if(!oldpassword || !newpassword){
         throw new BadRequestError("Enter your passwords")
     }
-    const user = await User.findOne
-    res.status(StatusCodes.OK).send("update password")
+    const user = await User.findById({_id: req.user.userId})
+    const isPassword = await user.comparePassword(oldpassword)
+    if(!isPassword){
+     throw new unAuthenticatedError("Invalid Password");
+    }
+    user.password = newpassword
+    await newUser.save()
+    res.status(StatusCodes.OK).json({user, newUser})
 }
 
 module.exports = {
