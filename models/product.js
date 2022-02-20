@@ -2,42 +2,74 @@ const mongoose = require('mongoose')
 
 const ProductSchema = new mongoose.Schema({
     name : {
-        type: String
+        type: String,
+        trim: true,
+        required: [true, "Please provide product's name"],
+        maxlength: [100, "Name can not be more than 100 characters."]
     },
     price: {
-        type: Number
+        type: Number,
+        required: [true, "Please provide product's price."],
+        default: 0
     },
     desciption:{
-        type: String
+        type: String,
+        required: [true, "Please provide product's description"],
+        maxlength: [1000, "Description can not be more than 1000 characters."]
     },
     image: {
-        type:  String
+        type:  String,
+        default: '/uploads/examples.jpg'
     },
     category: {
-        type: String
+        type: String,
+        required: [true, "Please provide product's category"],
+        enum: ['home', 'office']
     },
     company: {
-        type: String
+        type: String,
+        required: [true, "Please provide product's Company."],
+        enum: {
+            values: ['LoniShege', 'Leksyking', 'CodeGenius', 'Bovage'],
+            message: '{VALUE} is not supported'
+        }
     },
     colors: {
-        type: []
+        type: [String],
+        default: ['#000'],
+        required: true
     },
     featured: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     freeShipping: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     inventory: {
-        type: Number
+        type: Number,
+        required: true,
+        default: 15
     },
     averageRating: {
-        type: Number
+        type: Number,
+        default: 0
     },
-
-
-
-},{timestamps: true})
+    numOfReviews : {
+        type: Number,
+        default: 0
+    },
+    user: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
+},
+{timestamps: true, 
+    toJSON: { virtuals: true }, 
+    toObject: { virtuals: true } 
+})
 
 const Product = mongoose.model('Product', ProductSchema)
 
