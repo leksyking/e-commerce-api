@@ -10,6 +10,7 @@ const errorHandlerMiddleware = require('./middlewares/errorHandler')
 const notFoundMiddleware = require('./middlewares/notfound')
 const authRouter = require('./routes/authRoute')
 const userRouter = require('./routes/userRoutes')
+const productRouter = require('./routes/productRoute')
 
 const app = express()
 
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 })
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', userRouter)
+app.use('/api/v1/product', productRouter)
 
 //Middlewares
 app.use(notFoundMiddleware)
