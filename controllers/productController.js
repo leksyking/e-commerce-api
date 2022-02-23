@@ -20,12 +20,14 @@ const getSingleProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     const {id: productId} = req.params
-    const product = await Product.findOneAndUpdate({_id: productId}, req.body, {new: true, runValidators:true}) 
+    const product = await Product.findByIdAndUpdate(productId, req.body, {new: true, runValidators:true}) 
     res.status(StatusCodes.OK).json({product})
 }
 
 const deleteProduct = async (req, res) => {
-    res.send('delete product')
+    const {id: productId} = req.params
+    const product = await Product.findByIdAndDelete(productId)
+    res.status(StatusCodes.OK).json({msg: "Successful"})
 }
 
 const uploadImage = async (req, res) => {
