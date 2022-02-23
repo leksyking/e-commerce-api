@@ -8,15 +8,20 @@ const createProduct = async (req, res) => {
 }
 
 const getAllProducts = async (req, res) => {
-    res.send('get all products')
+    const product = await Product.find({})
+    res.status(StatusCodes.OK).json({product, nbHits: product.length})
 }
 
 const getSingleProduct = async (req, res) => {
-    res.send('get a product')
+    const {id: productId} = req.params
+    const product = await Product.findById(productId)
+    res.status(StatusCodes.OK).json({product})
 }
 
 const updateProduct = async (req, res) => {
-    res.send('update product')
+    const {id: productId} = req.params
+    const product = await Product.findOneAndUpdate({_id: productId}, req.body, {new: true, runValidators:true}) 
+    res.status(StatusCodes.OK).json({product})
 }
 
 const deleteProduct = async (req, res) => {
