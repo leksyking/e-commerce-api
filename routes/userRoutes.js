@@ -9,4 +9,6 @@ router.route('/showUser').get(authMiddleware, showCurrentUser);
 router.route('/updatePassword').patch(authMiddleware, updateUserPassword)
 router.route('/updateUser').patch(authMiddleware, updateUser)
 router.route('/:id').get(authMiddleware, getSingleUser)
+
+
 module.exports = router

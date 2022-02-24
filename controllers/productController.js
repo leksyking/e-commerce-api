@@ -1,5 +1,6 @@
 const Product = require('../models/product')
 const {StatusCodes} = require('http-status-codes')
+const { notFoundError } = require('../errors')
  
 const createProduct = async (req, res) => {
     req.body.user = req.user.userId
@@ -15,12 +16,18 @@ const getAllProducts = async (req, res) => {
 const getSingleProduct = async (req, res) => {
     const {id: productId} = req.params
     const product = await Product.findById(productId)
+    if(!product){
+        throw new notFoundError(`No product with id: ${productId}`)
+    }
     res.status(StatusCodes.OK).json({product})
 }
 
 const updateProduct = async (req, res) => {
     const {id: productId} = req.params
     const product = await Product.findByIdAndUpdate(productId, req.body, {new: true, runValidators:true}) 
+    if(!product){
+        throw new notFoundError(`No product with id: ${productId}`)
+    }
     res.status(StatusCodes.OK).json({product})
 }
 
