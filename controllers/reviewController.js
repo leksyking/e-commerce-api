@@ -1,4 +1,10 @@
+const Review = require('../models/review')
+
+
 const createReview = async (req, res) => {
+    req.body.user = req.user.userId
+    //get product id
+    const review = await Review.create()
     res.send('Create a review')
 }
 const getAllReviews = async (req, res) => {
