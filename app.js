@@ -3,6 +3,7 @@ require('express-async-errors')
 
 const express = require('express')
 const cookieParser = require('cookie-parser')
+const fileUpload = require('express-fileupload')
 
 //imported modules
 const connectDB = require('./db/connect')
@@ -18,10 +19,20 @@ const app = express()
 //middlewares
 app.use(express.json())
 app.use(cookieParser(process.env.COOKIE_P))
+app.use(fileUpload())
+
 
 //Routes
 app.get('/', (req, res) => {
-    res.send("Welcome to the Home Route")
+    res.sendFile(__dirname + '/file.html')
+})
+app.post('/', (req, res)=>{
+    if(req.files){
+        res.send('success')
+    }
+    console.log(req.files.pictures);
+
+
 })
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', userRouter)
