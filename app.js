@@ -24,16 +24,9 @@ app.use(fileUpload())
 
 //Routes
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/file.html')
+    res.send("Welcome")
 })
-app.post('/', (req, res)=>{
-    if(req.files){
-        res.send('success')
-    }
-    console.log(req.files.pictures);
 
-
-})
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/product', productRouter)
