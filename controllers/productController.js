@@ -43,14 +43,13 @@ const uploadImage = async (req, res) => {
         throw new notFoundError("Please upload a file")
     }
     const productImage = req.files.image
-    if(!productImage.mimetype.startWith("image")){
+    if(!productImage.mimetype.startsWith("image")){
         throw new BadRequestError("Please upoad an image")
     }
     const maxSize = 1024 * 1024
     if(productImage.size > maxSize){
         throw new BadRequestError("Size should not be more than 1MB")
     }
-
     const imagePath = path.join(__dirname, '../public/uploads/' + ` ${productImage.name}`)
     await productImage.mv(imagePath)
     res.status(200).json({image: `/uploads/${productImage.name}`})
