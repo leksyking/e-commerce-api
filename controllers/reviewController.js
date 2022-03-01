@@ -6,10 +6,9 @@ const Product = require('../models/product')
 
 const createReview = async (req, res) => {
     const {product: productId} = req.body
-    console.log(productId)
     const validProduct = await Product.findOne({_id : productId})
     if(!validProduct){
-        throw new notFoundError(`User with id: ${productId} does not exist.`)
+        throw new notFoundError(`Product with id: ${productId} does not exist.`)
     }
     const validReview = await Review.findOne({product: productId, user: req.user.userId})
     if(validReview){
@@ -20,7 +19,7 @@ const createReview = async (req, res) => {
     res.status(StatusCodes.OK).json({review})
 }
 const getAllReviews = async (req, res) => {
-    const reviews = await Review.find({})
+    const reviews = await Review.find({}).populate({path: 'product', select: 'name price company'})
     res.status(StatusCodes.OK).json({reviews})
 }
 const getSingleReview = async (req, res) => {
