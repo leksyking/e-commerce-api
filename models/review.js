@@ -23,7 +23,11 @@ const reviewSchema = new mongoose.Schema({
     }
 }, {timestamps: true })
 
+reviewSchema.index({product: 1, user: 1}, {unique: true})
 
+reviewSchema.statics.calculateAverageRating = async function(productId){
+    const result = await this.aggregate()
+}
 const Review = mongoose.model('Review', reviewSchema)
 
 module.exports = Review
