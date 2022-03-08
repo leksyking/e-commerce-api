@@ -31,11 +31,11 @@ reviewSchema.statics.calculateAverageRating = async function(productId){
         {$group:{
             _id: null,
             averageRating:{$avg: '$rating'} ,
-            noOfReviews: {$sum: 1}
+            numOfReviews: {$sum: 1}
         }}
     ])
     try {
-        await this.model('Product').findOneandUpdate(
+        await this.model('Product').findOneAndUpdate(
             {_id: productId},
             {
                 averageRating: Math.ceil(result[0]?.averageRating || 0),
