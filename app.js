@@ -13,6 +13,7 @@ const authRouter = require('./routes/authRoute')
 const userRouter = require('./routes/userRoutes')
 const productRouter = require('./routes/productRoute')
 const reviewRouter = require('./routes/reviewRoute')
+const orderRouter = require('./routes/orderRoute')
 
 const app = express()
 
@@ -31,6 +32,7 @@ app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/product', productRouter)
 app.use('/api/v1/review', reviewRouter)
+app.use('/api/v1/order', orderRouter)
 
 //Middlewares
 app.use(notFoundMiddleware)
