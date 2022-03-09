@@ -76,6 +76,7 @@ ProductSchema.virtual('reviews', {
     foreignField: 'product',
     justOne: false
 })
+
 ProductSchema.pre('remove', async function(){
     await this.model('Review').deleteMany({product: this._id})
   
