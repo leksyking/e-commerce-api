@@ -76,7 +76,7 @@ const getCurrentUserOrders = async (req, res) => {
     if(!order){
       throw new notFoundError(`No orders created by ${order.user}`)
     }
-    res.status(StatusCodes.OK).json({orders: order})
+    res.status(StatusCodes.OK).json({orders: order, nbHits: order.length})
 }
 
 const updateOrder = async (req, res) => {
