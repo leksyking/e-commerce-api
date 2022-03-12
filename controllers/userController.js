@@ -33,8 +33,8 @@ const updateUserPassword = async (req, res) => {
      throw new unAuthenticatedError("Invalid Password");
     }
     user.password = newpassword
-    await newUser.save()
-    res.status(StatusCodes.OK).json({user, newUser})
+    await user.save()
+    res.status(StatusCodes.OK).json('Password change successful')
 }
 
 const updateUser = async (req, res) => {
