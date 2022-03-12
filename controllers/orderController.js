@@ -72,7 +72,11 @@ const getSingleOrder = async (req, res) => {
     res.status(StatusCodes.OK).json({order})
 }
 const getCurrentUserOrders = async (req, res) => {
-    res.send('get current user orders')
+    const order = await Order.find({user: req.user.userId})
+    if(!order){
+      throw new notFoundError(`No orders created by ${order.user}`)
+    }
+    res.status(StatusCodes.OK).json({orders: order})
 }
 
 const updateOrder = async (req, res) => {
