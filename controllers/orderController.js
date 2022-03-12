@@ -9,7 +9,7 @@ const fakeStripeAPI = async ({amount, currency}) => {
 }
 
 const createOrder = async (req, res) => {
-    const {items: cartItems, tax, shippingFee} = req.body
+    const {items: cartItems, tax, shippingFee} = req.body;
     if(!cartItems || cartItems.length < 1){
         throw new BadRequestError('Provide cart items.')
     }
@@ -31,7 +31,7 @@ const createOrder = async (req, res) => {
             price,
             image,
             product: _id
-            }
+        }
         //add item to order
         orderItems = [...orderItems, SingleOrderItem];
             //calculate subtotal
@@ -54,11 +54,11 @@ const createOrder = async (req, res) => {
         clientSecret: paymentIntent.client_secret,
         user: req.user.userId,
     })
-
     res.status(StatusCodes.CREATED).json({order, clientSecret: order.clientSecret})
 }
 const getAllOrders = async (req, res) => {
-    res.send('gett all orders')
+    const order = await Order.find({})
+    res.status(StatusCodes.OK).json({order})
 }
 const getSingleOrder = async (req, res) => {
     res.send('get single order')
@@ -78,40 +78,3 @@ module.exports = {
     createOrder,
     updateOrder
 }
-
-[
-      {
-        "tax": 399,
-        "shippingFee": 499,
-        "items": [
-          {
-            "name": "accent chair",
-            "price": 2599,
-            "image": "https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160",
-            "amount": 34,
-            "product": "6126ad3424d2bd09165a68c8"
-          }
-        ]
-      },
-      {
-        "tax": 499,
-        "shippingFee": 799,
-        "items": [
-          {
-            "name": "bed",
-            "price": 2699,
-            "image": "https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160",
-            "amount": 3,
-            "product": "6126ad3424d2bd09165a68c7"
-          },
-          {
-            "name": "chair",
-            "price": 2999,
-            "image": "https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160",
-            "amount": 2,
-            "product": "6126ad3424d2bd09165a68c4"
-          }
-        ]
-      }
-    ]
-    
