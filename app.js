@@ -37,7 +37,7 @@ app.use(xss())
 app.use(helmet())
 
 
-
+app.use(express.static('./public'))
 //middlewares
 app.use(express.json())
 app.use(cookieParser(process.env.COOKIE_P))
