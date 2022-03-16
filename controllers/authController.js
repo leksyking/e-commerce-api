@@ -47,8 +47,25 @@ const logout = async (req, res) => {
     res.status(StatusCodes.OK).json({msg: "User is logged out"})
 }
 
+const verifyEmail = async (req, res) => {
+    const {verificationToken, email} = req.body
+    const user = await User.findOne({email})
+    if(!user){
+        throw new  unAuthenticatedError('Invalid Email')
+    }
+    if(verificationToken !== user.verificationToken){
+        throw new  unAuthenticatedError('Invalid Token')
+    }
+    user.isVerified = true;
+    user.verified = Date.now();
+    user.verificationToken = '';
+    await user.save();
+
+    res.status(StatusCodes.OK).json({msg: 'Email verified'})
+}
 module.exports = {
     register,
     login,
-    logout
+    logout,
+    verifyEmail
 }
