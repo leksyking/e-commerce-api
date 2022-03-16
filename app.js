@@ -10,6 +10,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')
 const xss = require('xss-clean')
+const mongoSanitize = require('express-mongo-sanitize')
 
 //imported modules
 const connectDB = require('./db/connect')
@@ -35,12 +36,14 @@ app.use(limiter)
 app.use(cors())
 app.use(xss())
 app.use(helmet())
+app.use(mongoSanitize())
 
 
-app.use(express.static('./public'))
+
 //middlewares
 app.use(express.json())
 app.use(cookieParser(process.env.COOKIE_P))
+app.use(express.static('./public'))
 app.use(fileUpload())
 
 
