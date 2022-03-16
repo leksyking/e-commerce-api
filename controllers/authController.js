@@ -11,11 +11,12 @@ const register = async (req, res) => {
     }
     //make first registered user an admin
     const checkFirstUser = (await User.countDocuments()) === 0
-    const role = checkFirstUser ? 'admin' : 'user'
-    const user = await  User.create({email, name, password, role})
-    const tokenUser = createTokenUser(user)
-    attachCookiesToResponse({res, user: tokenUser})
-    res.status(StatusCodes.CREATED).json({user: tokenUser })
+    const role = checkFirstUser ? 'admin' : 'user';
+
+    const verificationToken = 'fictionalized token';
+    const user = await  User.create({email, name, password, role, verificationToken})
+    console.log(user)
+    res.status(StatusCodes.CREATED).json({msg: 'Success', verificationToken})
 }
 
 const login = async (req, res) => {
