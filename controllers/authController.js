@@ -15,7 +15,6 @@ const register = async (req, res) => {
 
     const verificationToken = 'fictionalized token';
     const user = await  User.create({email, name, password, role, verificationToken})
-    console.log(user)
     res.status(StatusCodes.CREATED).json({msg: 'Success', verificationToken})
 }
 
@@ -31,6 +30,9 @@ const login = async (req, res) => {
     const isPassword = await user.comparePassword(password)
     if(!isPassword){
      throw new unAuthenticatedError("Invalid Password");
+    }
+    if(!user.isVerified){
+        throw new unAuthenticatedError("Please verify your email")
     }
     const tokenUser = createTokenUser(user)
     attachCookiesToResponse({res, user: tokenUser})
