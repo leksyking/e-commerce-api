@@ -8,8 +8,9 @@ const sendVerificationEmail = async ({name, email, verificationToken, origin}) =
     return sendMail({
         to:email,
         subject: 'Email Confirmation',
-        html:`<h4>Hello ${name}</h4>
-        ${message}`});
+        html:`<h4>Hello, ${name}</h4>
+        ${message}`
+    });
 };
 
 module.exports = sendVerificationEmail;

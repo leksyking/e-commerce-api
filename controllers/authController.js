@@ -10,7 +10,7 @@ const register = async (req, res) => {
        throw new BadRequestError("Email Exists Already")
     }
     //make first registered user an admin
-    const checkFirstUser = (await User.countDocuments()) === 0
+    const checkFirstUser = (await User.countDocuments({})) === 0;
     const role = checkFirstUser ? 'admin' : 'user';
 
     const verificationToken = 'fictionalized token';
