@@ -1,5 +1,5 @@
 const User = require('../models/user')
-const {createTokenUser ,attachCookiesToResponse} = require('../utils')
+const {createTokenUser ,attachCookiesToResponse, sendVerificationEmail} = require('../utils')
 const { BadRequestError, unAuthenticatedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes')
 
@@ -14,8 +14,12 @@ const register = async (req, res) => {
     const role = checkFirstUser ? 'admin' : 'user';
 
     const verificationToken = 'fictionalized token';
-    const user = await  User.create({email, name, password, role, verificationToken})
-    res.status(StatusCodes.CREATED).json({msg: 'Success', verificationToken})
+    const user = await  User.create({email, name, password, role, verificationToken});
+
+    const origin = "http://localhost:5000/api/v1";
+    await sendVerificationEmail({name:user.name, email:user.email, verificationToken: user.verificationToken, origin});
+    
+    res.status(StatusCodes.CREATED).json({msg: 'Success, Please check your email to verify your account', verificationToken})
 }
 
 const verifyEmail = async (req, res) => {
