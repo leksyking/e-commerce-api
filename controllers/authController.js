@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const Token = require('../models/token')
 const {createTokenUser ,attachCookiesToResponse, sendVerificationEmail} = require('../utils')
 const { BadRequestError, unAuthenticatedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes')
@@ -57,6 +58,22 @@ const login = async (req, res) => {
         throw new unAuthenticatedError("Please verify your email")
     }
     const tokenUser = createTokenUser(user)
+
+    //create fresh token
+    let refreshToken = '';
+    //check for existing token
+    const existingToken = await Token.findOne({user: user._id})
+
+    if(existingToken){
+        const {isValid} = existingToken;
+        if(!isValid){
+            throw new unAuthenticatedError("Invalid details")
+        }
+        refreshToken = existingToken.refreshToken;
+        attachCookiesToResponse({res, user: tokenUser, refreshToken})
+        res.status(StatusCodes.OK).json({user: tokenUser})
+        return;
+    }
     attachCookiesToResponse({res, user: tokenUser})
     res.status(StatusCodes.OK).json({user: tokenUser})
 }
