@@ -3,6 +3,8 @@ const Token = require('../models/token')
 const {createTokenUser ,attachCookiesToResponse, sendVerificationEmail} = require('../utils')
 const { BadRequestError, unAuthenticatedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes')
+const crypto = require('crypto')
+
 
 const register = async (req, res) => {
     const { email, name, password } = req.body
@@ -14,7 +16,8 @@ const register = async (req, res) => {
     const checkFirstUser = (await User.countDocuments({})) === 0;
     const role = checkFirstUser ? 'admin' : 'user';
 
-    const verificationToken = 'fictionalized token';
+    const verificationToken = crypto.randomBytes(40).toString('hex');
+    console.log(verificationToken);
     const user = await  User.create({email, name, password, role, verificationToken});
 
     const origin = "http://localhost:5000/api/v1";
@@ -74,9 +77,19 @@ const login = async (req, res) => {
         res.status(StatusCodes.OK).json({user: tokenUser})
         return;
     }
-    attachCookiesToResponse({res, user: tokenUser})
+
+    refreshToken = crypto.randomBytes(40).toString('hex');
+    console.log(refreshToken);
+    const userAgent = req.headers('user-agent');
+    const ip = req.ip;
+    const userToken = {userAgent, ip, user: user._id}
+    console.log(userToken);
+    await Token.create(userToken)
+
+    attachCookiesToResponse({res, user: tokenUser, refreshToken})
     res.status(StatusCodes.OK).json({user: tokenUser})
 }
+
 
 const logout = async (req, res) => {
     res.cookie('token', 'logout',{
