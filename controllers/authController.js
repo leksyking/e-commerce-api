@@ -17,9 +17,7 @@ const register = async (req, res) => {
     const role = checkFirstUser ? 'admin' : 'user';
 
     const verificationToken = crypto.randomBytes(40).toString('hex');
-    console.log(verificationToken);
     const user = await  User.create({email, name, password, role, verificationToken});
-
     const origin = "http://localhost:5000/api/v1";
     await sendVerificationEmail({name:user.name, email:user.email, verificationToken: user.verificationToken, origin});
     
@@ -37,7 +35,7 @@ const verifyEmail = async (req, res) => {
     }
     user.isVerified = true;
     user.verified = Date.now();
-    user.verificationToken = '';
+    user.verificationToken = '';    
     await user.save();
 
     res.status(StatusCodes.OK).json({msg: 'Email verified'})
@@ -54,6 +52,7 @@ const login = async (req, res) => {
         throw new unAuthenticatedError("Invalid email")
     }
     const isPassword = await user.comparePassword(password)
+
     if(!isPassword){
      throw new unAuthenticatedError("Invalid Password");
     }
@@ -79,8 +78,7 @@ const login = async (req, res) => {
     }
 
     refreshToken = crypto.randomBytes(40).toString('hex');
-    console.log(refreshToken);
-    const userAgent = req.headers('user-agent');
+    const userAgent = req.headers['user-agent'];
     const ip = req.ip;
     const userToken = {userAgent, ip, user: user._id}
     console.log(userToken);
@@ -89,6 +87,8 @@ const login = async (req, res) => {
     attachCookiesToResponse({res, user: tokenUser, refreshToken})
     res.status(StatusCodes.OK).json({user: tokenUser})
 }
+
+  
 
 
 const logout = async (req, res) => {
