@@ -117,7 +117,7 @@ const forgotPassword = async () => {
       await sendResetPasswordEmail({
           name: user.name,
           email: user.email,
-          token: passwordTokens,
+          token: passwordToken,
           origin
       });
       const tenMinutes = 1000 * 60 * 10;
@@ -131,7 +131,22 @@ const forgotPassword = async () => {
 }
 
 const resetPassword = async () => {
-    
+    const {email, token, password} = req.body;
+    if(!email || !token || !password){
+        throw new BadRequestError('Please fill the required fields')
+    }
+    const user = await User.findOne({email})
+    if(!user){
+        throw new BadRequestError('Invalid email')
+    }
+    const currentDay = new Date()
+    if(user.passwordToken === createHash(token) && user.passwordTokenExpirationDate > currentDay ){
+        user.password = password;
+        user.passwordToken = null;
+        user.passwordTokenExpirationDate = null;
+        await user.save()
+    }
+    res.status(StatusCodes.OK).json({msg: "Password reset successful"})
 }
 
 module.exports = {
