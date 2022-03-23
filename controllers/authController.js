@@ -1,6 +1,6 @@
 const User = require('../models/user')
 const Token = require('../models/token')
-const {createTokenUser ,attachCookiesToResponse, sendVerificationEmail, sendResetPasswordEmail, createHash} = require('../utils')
+const {createTokenUser, attachCookiesToResponse, sendVerificationEmail, sendResetPasswordEmail, createHash} = require('../utils')
 const { BadRequestError, unAuthenticatedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes')
 const crypto = require('crypto')
@@ -65,7 +65,6 @@ const login = async (req, res) => {
     let refreshToken = '';
     //check for existing token
     const existingToken = await Token.findOne({user: user._id})
-
     if(existingToken){
         const {isValid} = existingToken;
         if(!isValid){

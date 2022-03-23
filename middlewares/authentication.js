@@ -1,19 +1,18 @@
-const { unAuthenticatedError, unAuthorizedError } = require('../errors')
-const {isTokenValid, attachCookiesToResponse} = require('../utils')
+const { unAuthenticatedError, unAuthorizedError, notFoundError } = require('../errors')
+const {attachCookiesToResponse} = require('../utils')
 const Token = require('../models/token');
-
-
+const { isTokenValid } = require('../utils');
 
 const authMiddleware = async (req, res, next) => {
     //check cookies
     const {accessToken, refreshToken} = req.signedCookies
     try {
     if(accessToken){
-        const payload = isTokenValid({accessToken})
+        const payload = isTokenValid(accessToken)
         req.user = payload.user;
         return next();
     }
-    const payload = isTokenValid({refreshToken})
+    const payload = isTokenValid(refreshToken)
 
     const existingToken = await Token.findOne({
         user: payload.user.userId, 
@@ -27,6 +26,7 @@ const authMiddleware = async (req, res, next) => {
     next();
     } catch (error) {
         throw new unAuthenticatedError("Authentication failed")
+       
     }
 }
 
