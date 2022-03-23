@@ -104,7 +104,7 @@ const logout = async (req, res) => {
     res.status(StatusCodes.OK).json({msg: "User is logged out"})
 }
 
-const forgotPassword = async () => {
+const forgotPassword = async (req, res) => {
     const {email} = req.body;
     if(!email){
         throw new BadRequestError("Please provide a valid email")
@@ -113,7 +113,7 @@ const forgotPassword = async () => {
 
     if(user){
       const passwordToken = crypto.randomBytes(70).toString('hex')
-      const origin = "http://localhost:3000";
+      const origin = "http://localhost:5000/api/v1";
       await sendResetPasswordEmail({
           name: user.name,
           email: user.email,
@@ -130,7 +130,7 @@ const forgotPassword = async () => {
     res.status(StatusCodes.OK).json({msg: 'Please check your email for password reset link'})
 }
 
-const resetPassword = async () => {
+const resetPassword = async (req, res) => {
     const {email, token, password} = req.body;
     if(!email || !token || !password){
         throw new BadRequestError('Please fill the required fields')
