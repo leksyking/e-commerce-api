@@ -45,7 +45,7 @@ const updateUser = async (req, res) => {
     const user = await User.findOneAndUpdate({_id: req.user.userId},req.body,{new:true, runValidators: true})
     const tokenUser = createTokenUser(user)
     attachCookiesToResponse({res, user: tokenUser})
-    res.status(StatusCodes.OK).send(tokenUser)
+    res.status(StatusCodes.OK).json({tokenUser})
 }
 
 

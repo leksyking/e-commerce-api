@@ -21,7 +21,7 @@ const register = async (req, res) => {
     const origin = "http://localhost:5000/api/v1";
     await sendVerificationEmail({name:user.name, email:user.email, verificationToken: user.verificationToken, origin});
     
-    res.status(StatusCodes.CREATED).json({msg: 'Success, Please check your email to verify your account', verificationToken})
+    res.status(StatusCodes.CREATED).json({msg: 'Success, Please check your email to verify your account'})
 }
 
 const verifyEmail = async (req, res) => {
