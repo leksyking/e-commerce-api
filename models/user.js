@@ -48,7 +48,7 @@ const UserSchema = new mongoose.Schema({
 }, {timestamps: true});
 
 UserSchema.pre('save', async function(){
-     // Generate a password hash when the password changes (or a new password)
+     // check whether password was modified
     if (!this.isModified('password')) return;
     //Generate a sat
     const salt = await bcrypt.genSalt(10)

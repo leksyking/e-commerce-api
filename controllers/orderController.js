@@ -87,7 +87,7 @@ const updateOrder = async (req, res) => {
       throw new notFoundError(`No order with id: ${orderId}`)
     }
     checkPermissions(req.user, order.user)
-    order.paymentIntent = paymentIntent;
+    order.paymentIntentId = paymentIntent;
     order.status = 'paid'
     await order.save()
     res.status(StatusCodes.OK).json({order})
