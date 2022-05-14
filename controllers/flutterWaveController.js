@@ -66,7 +66,7 @@ const createTransaction = async ({id, status, currency, amount, customer})=>{
 
 const updateWallet = async (amount) =>{
     //remember do do {$inc}
-    const wallet = await Wallet.findOneAndUpdate({userId: req.user.userId}, {balance: amount}, {new: true})
+    const wallet = await Wallet.findOneAndUpdate({userId: req.user.userId}, {$inc: {balance: amount}}, {new: true})
     return wallet
 }
 

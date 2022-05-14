@@ -4,7 +4,7 @@ const nodemailerConfig = require('./nodemailerConfig')
 const sendMail = async ({to, subject, html}) => {
     let transporter = nodemailer.createTransport(nodemailerConfig);
     let mailOptions = {
-            from: '"Leksyking" <gbemilekeogundipe@gmail.com>', // sender address
+            from: '"Leksyking" <foogundipe@student.oauife.edu.ng>', // sender address
             to,// list of receivers
             subject, // Subject line
             html, // html body
