@@ -24,11 +24,12 @@
           // specified redirect URL
           redirect_url: "http://localhost:5000/response",
 
-          // use customer details if user is not logged in, else add user_id to the request
+          // use customer details if user is not logged in, else add user._id and order._id to the request
           customer: {
             email: "leksybaba@gmail.com",
             phone_number: "08053997794",
             name: "Ogundipe Felix",
+            order_id: "2456373829928736373377d",
           },
           callback: function (data) {
             console.log(data);

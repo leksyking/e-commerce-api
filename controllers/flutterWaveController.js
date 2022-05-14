@@ -4,6 +4,7 @@ const WalletTransaction = require('../models/walletTransaction')
 const { BadRequestError } = require('../errors')
 
 const response = async(req, res) =>{
+try {
     const {transaction_id} = req.query
     const url = `https://api.flutterwave.com/v3/transactions/${transaction_id}/verify`;
 
@@ -18,15 +19,15 @@ const response = async(req, res) =>{
     })
     console.log(response.data.data)
     const {status, currency, customer, id, amount}  = response.data.data;
-
-    //check if user has a wallet
-    const wallet = await validateUserWallet()
-    await createWalletTransaction({status, currency, amount})
     //check if transaction id exists already
     const transaction = await Transaction.findOne({transactionId: id})
     if (transaction){
         throw new BadRequestError("Transaction id already exists.")
     }
+    //check if user has a wallet
+    const wallet = await validateUserWallet()
+    await createWalletTransaction({status, currency, amount})
+    
     await createTransaction({id, status, currency, amount, customer})
     await updateWallet(amount)
 
@@ -34,6 +35,10 @@ const response = async(req, res) =>{
         response: "Wallet funded successfuly",
         data: wallet
     })
+} catch (error){
+    console.log(error);
+    res.status(500).json({msg: "Something went wrong, try again later."})
+}
 
 }
 
@@ -53,7 +58,7 @@ const createWalletTransaction = async ({status, currency, amount})=>{
 
 const createTransaction = async ({id, status, currency, amount, customer})=>{
     const transaction = await Transaction.create({userId: req.user.userId, 
-        paymentStatus: status, paymentGateway: "flutterwave", amount, currency, 
+        paymentStatus: status, paymentGateway: "flutterwave", amount, currency, orderId: customer.order_id,
         transactionId: id, name: customer.name, email: customer.email, phone: customer.phone_number
     })
     return transaction
@@ -64,3 +69,5 @@ const updateWallet = async (amount) =>{
     const wallet = await Wallet.findOneAndUpdate({userId: req.user.userId}, {balance: amount}, {new: true})
     return wallet
 }
+
+module.exports = response;

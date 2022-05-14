@@ -53,6 +53,10 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    currency:{
+        type: String,
+        required: true
+    },
     paymentIntentId: {
         type: String
     }

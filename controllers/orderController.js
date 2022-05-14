@@ -1,13 +1,15 @@
 const Order = require('../models/order')
 const Product = require('../models/product')
+const Transaction = require('../models/transaction')
 
 const { BadRequestError, notFoundError } = require('../errors');
 const { StatusCodes } = require('http-status-codes');
 const { checkPermissions } = require('../utils');
+const transaction = require('../models/transaction');
 
-const fakeStripeAPI = async ({amount, currency}) => {
+const flutterWave = async ({amount, currency}) => {
     const client_secret = "sabbshkidasj";
-    return {client_secret, amount} 
+    return {client_secret, amount, currency} 
 }
 
 const createOrder = async (req, res) => {
@@ -43,9 +45,9 @@ const createOrder = async (req, res) => {
     const total = tax + shippingFee + subtotal;
 
     //client secret
-    const paymentIntent = await fakeStripeAPI({
+    const paymentIntent = await flutterWave({
         amount: total,
-        currency: 'usd',
+        currency: 'NGN',
     })
     const order  = await Order.create({
         orderItems,
@@ -53,10 +55,11 @@ const createOrder = async (req, res) => {
         subtotal,
         tax,
         shippingFee,
+        currency: paymentIntent.currency,
         clientSecret: paymentIntent.client_secret,
         user: req.user.userId,
     })
-    res.status(StatusCodes.CREATED).json({order, clientSecret: order.clientSecret})
+    res.status(StatusCodes.CREATED).json({order})
 }
 const getAllOrders = async (req, res) => {
     const order = await Order.find({})
@@ -87,9 +90,13 @@ const updateOrder = async (req, res) => {
       throw new notFoundError(`No order with id: ${orderId}`)
     }
     checkPermissions(req.user, order.user)
-    order.paymentIntentId = paymentIntent;
-    order.status = 'paid'
-    await order.save()
+    //check Transaction
+    const checkTransaction = await Transaction.findOne({orderId: order._id})
+    if (checkTransaction.paymentStatus == "successful"){
+        order.paymentIntentId = paymentIntent;
+        order.status = 'paid'
+        await order.save()
+    }
     res.status(StatusCodes.OK).json({order})
 }
 
