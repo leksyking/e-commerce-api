@@ -43,7 +43,8 @@ app.use(mongoSanitize())
 //middlewares
 app.use(express.json())
 app.use(cookieParser(process.env.COOKIE_P))
-app.use(express.static('./public'))
+//app.use(express.static('./public'))
+app.use(express.static('./dummyPublic'))
 app.use(fileUpload())
 
 
