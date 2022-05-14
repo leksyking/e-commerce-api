@@ -5,7 +5,6 @@ const Transaction = require('../models/transaction')
 const { BadRequestError, notFoundError } = require('../errors');
 const { StatusCodes } = require('http-status-codes');
 const { checkPermissions } = require('../utils');
-const transaction = require('../models/transaction');
 
 const flutterWave = async ({amount, currency}) => {
     const client_secret = "sabbshkidasj";

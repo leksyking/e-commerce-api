@@ -21,6 +21,7 @@ const userRouter = require('./routes/userRoutes')
 const productRouter = require('./routes/productRoute')
 const reviewRouter = require('./routes/reviewRoute')
 const orderRouter = require('./routes/orderRoute')
+const flutterWaveRouter = require('./routes/flutterWaveRoute')
 
 const app = express()
 
@@ -58,6 +59,7 @@ app.use('/api/v1/users', userRouter)
 app.use('/api/v1/product', productRouter)
 app.use('/api/v1/review', reviewRouter)
 app.use('/api/v1/order', orderRouter)
+app.use('api/v1/pay', flutterWaveRouter)
 
 //Middlewares
 app.use(notFoundMiddleware)
