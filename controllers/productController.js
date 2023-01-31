@@ -60,6 +60,19 @@ const uploadImage = async (req, res) => {
     const imagePath = path.join(__dirname, '../public/uploads/' + ` ${productImage.name}`)
     await productImage.mv(imagePath)
     res.status(200).json({image: `/uploads/${productImage.name}`})
+
+    //filter the image
+    // const imagePathURL = path.join(__dirname, "../public/uploads/" + `${productImage.name}`)
+    // await productImage.mv(imagePathURL);
+    // const outpath =
+    //     "/public/uploads." + Math.floor(Math.random() * 2000) + ".jpg";
+    // const image = await jimp.read(imagePathURL);
+    // await image
+    // .resize(1024, 1024)
+    // .quality(80)
+    // .write(__dirname + outpath, (img) =>{
+    //     path.join(__dirname + outpath)
+    // });
 }
 
 module.exports = {

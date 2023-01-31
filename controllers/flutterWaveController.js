@@ -2,6 +2,7 @@ const Wallet = require('../models/wallet')
 const Transaction = require('../models/transaction')
 const WalletTransaction = require('../models/walletTransaction')
 const { BadRequestError } = require('../errors')
+const axios = require('axios').default
 
 const response = async(req, res) =>{
 try {

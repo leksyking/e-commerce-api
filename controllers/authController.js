@@ -145,6 +145,8 @@ const resetPassword = async (req, res) => {
         user.passwordToken = null;
         user.passwordTokenExpirationDate = null;
         await user.save()
+    } else{
+        throw new BadRequestError("Invalid Token")
     }
     res.status(StatusCodes.OK).json({msg: "Password reset successful"})
 }
